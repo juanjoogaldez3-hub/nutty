@@ -796,12 +796,17 @@ const DATOS_ORIGINALES = {
 
 const CLAVE = "nuttyadmin2026";
 const LS_KEY = "nuttyco_datos";
+const LS_VER = "nuttyco_version";
+/* Sube este número cada vez que cambies el catálogo en el archivo.
+   Así se ignora la copia vieja guardada en el navegador de los visitantes. */
+const DATOS_VERSION = "2026-08-24-1";
 let DATOS = cargarDatos();
 
 function cargarDatos(){
   try{
+    const ver = localStorage.getItem(LS_VER);
     const guardado = localStorage.getItem(LS_KEY);
-    if(guardado) return JSON.parse(guardado);
+    if(guardado && ver === DATOS_VERSION) return JSON.parse(guardado);
   }catch(e){}
   return JSON.parse(JSON.stringify(DATOS_ORIGINALES));
 }
@@ -990,6 +995,7 @@ function eliminarCategoria(ci){
 function guardarDatos(){
   try{
     localStorage.setItem(LS_KEY, JSON.stringify(DATOS));
+    localStorage.setItem(LS_VER, DATOS_VERSION);
   }catch(e){
     alert("No se pudo guardar en este navegador (puede que la foto subida sea muy pesada). Usa Exportar para respaldar tus cambios.");
   }
